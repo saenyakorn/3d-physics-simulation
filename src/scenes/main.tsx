@@ -1,7 +1,9 @@
 import { useThree } from '@react-three/fiber'
-import { Box } from '../objects/box'
-import { Car } from '../objects/car'
-import { CameraControls, Stage } from '@react-three/drei'
+import { CameraControls } from '@react-three/drei'
+import { Floor } from '../objects/Floor'
+import { Physics } from '@react-three/rapier'
+import { Car } from '../objects/Car'
+import { Box } from '../objects/Box'
 
 export function MainScene() {
   useThree(({ camera }) => {
@@ -10,12 +12,13 @@ export function MainScene() {
 
   return (
     <>
-      {/* <Stage preset="rembrandt" intensity={1} environment="city"> */}
-      <Car />
-      <Box />
-      {/* </Stage> */}
-      <ambientLight />
-      <pointLight position={[10, 10, 10]} />
+      <ambientLight intensity={0.3} />
+      <pointLight castShadow intensity={0.8} position={[100, 100, 100]} />
+      <Physics gravity={[0, -30, 0]}>
+        <Box />
+        <Car />
+        <Floor />
+      </Physics>
       <CameraControls />
     </>
   )
