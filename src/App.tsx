@@ -1,7 +1,7 @@
 import { KeyboardControls } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 
-import { MainScene } from './scenes/main'
+import { MainScene } from './scenes/MainScene'
 
 export const KeyBoardControlKey = {
   FORWARD: 'forward',

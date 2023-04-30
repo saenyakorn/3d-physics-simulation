@@ -25,7 +25,7 @@ export function Car({ speed = 20 }: CarProps) {
     // Get keyboard controls
     const { forward, backward, left, right, jump } = get()
     const velocity = ref.current.linvel()
-    // // update camera
+    // update camera
     const translation = ref.current.translation()
     state.camera.position.set(10, 10, 10)
     // movement
