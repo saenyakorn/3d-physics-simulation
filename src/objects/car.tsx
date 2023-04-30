@@ -3,6 +3,7 @@ import { useRef } from 'react'
 import { useKeyboardControls } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { RapierRigidBody, RigidBody } from '@react-three/rapier'
+
 import { Vector3 } from 'three'
 
 import { useModelLoader } from '../hooks/useModelLoader'

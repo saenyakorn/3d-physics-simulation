@@ -4,7 +4,7 @@ module.exports = {
   printWidth: 100,
   tabWidth: 2,
   trailingComma: 'es5',
-  importOrder: ['^react*', '<THIRD_PARTY_MODULES>', '^[./]'],
+  importOrder: ['^react*', '^@react-three*', '^three*', '<THIRD_PARTY_MODULES>', '^[./]'],
   importOrderSeparation: true,
   importOrderSortSpecifiers: true,
   importOrderParserPlugins: ['decorators-legacy', 'jsx', 'typescript'],
