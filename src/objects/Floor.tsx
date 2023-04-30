@@ -1,5 +1,4 @@
 import { CuboidCollider, RigidBody } from '@react-three/rapier'
-import { RepeatWrapping } from 'three'
 
 interface FloorProps {}
 

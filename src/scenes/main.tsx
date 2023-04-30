@@ -1,9 +1,10 @@
-import { useThree } from '@react-three/fiber'
 import { CameraControls } from '@react-three/drei'
-import { Floor } from '../objects/Floor'
+import { useThree } from '@react-three/fiber'
 import { Physics } from '@react-three/rapier'
-import { Car } from '../objects/Car'
+
 import { Box } from '../objects/Box'
+import { Car } from '../objects/Car'
+import { Floor } from '../objects/Floor'
 
 export function MainScene() {
   useThree(({ camera }) => {

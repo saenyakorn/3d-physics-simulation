@@ -1,9 +1,11 @@
-import { useFrame } from '@react-three/fiber'
-import { useModelLoader } from '../hooks/useModelLoader'
-import { useKeyboardControls } from '@react-three/drei'
-import { RigidBody, RapierRigidBody, useRapier } from '@react-three/rapier'
 import { useRef } from 'react'
+
+import { useKeyboardControls } from '@react-three/drei'
+import { useFrame } from '@react-three/fiber'
+import { RapierRigidBody, RigidBody } from '@react-three/rapier'
 import { Vector3 } from 'three'
+
+import { useModelLoader } from '../hooks/useModelLoader'
 
 interface CarProps {
   speed?: number

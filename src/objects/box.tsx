@@ -1,5 +1,6 @@
-import { MeshProps, useFrame } from '@react-three/fiber'
 import { useRef, useState } from 'react'
+
+import { MeshProps, useFrame } from '@react-three/fiber'
 import { BufferGeometry, Material, Mesh } from 'three'
 
 export function Box(props: MeshProps) {

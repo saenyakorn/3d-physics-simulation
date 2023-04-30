@@ -1,8 +1,7 @@
-import { Canvas } from '@react-three/fiber'
-import { MainScene } from './scenes/main'
 import { KeyboardControls } from '@react-three/drei'
-import { Physics } from '@react-three/rapier'
-import { Floor } from './objects/Floor'
+import { Canvas } from '@react-three/fiber'
+
+import { MainScene } from './scenes/main'
 
 export const KeyBoardControlKey = {
   FORWARD: 'forward',
@@ -11,8 +10,7 @@ export const KeyBoardControlKey = {
   RIGHT: 'right',
   JUMP: 'jump',
 } as const
-export type KeyBoardControlKey =
-  (typeof KeyBoardControlKey)[keyof typeof KeyBoardControlKey]
+export type KeyBoardControlKey = (typeof KeyBoardControlKey)[keyof typeof KeyBoardControlKey]
 
 export function App() {
   return (
