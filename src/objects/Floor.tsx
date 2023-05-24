@@ -1,12 +1,16 @@
+import { forwardRef } from 'react'
+
 import { Box } from '@react-three/drei'
-import { RigidBody } from '@react-three/rapier'
+import { RapierRigidBody, RigidBody, RigidBodyProps } from '@react-three/rapier'
 
-interface FloorProps {}
+interface FloorProps extends RigidBodyProps {}
 
-export function Floor(props: FloorProps) {
+export const Floor = forwardRef<RapierRigidBody, FloorProps>(function Floor(props, ref) {
   return (
-    <RigidBody {...props} type="fixed" friction={100}>
-      <Box material-color="yellow" receiveShadow position={[0, 0, 0]} args={[1000, 1, 1000]} />
+    <RigidBody type="fixed" name={props.name} ref={ref}>
+      <Box position={[0, 0, 0]} args={[100, 0.1, 100]}>
+        <meshStandardMaterial color="#EAE0AD" />
+      </Box>
     </RigidBody>
   )
-}
+})

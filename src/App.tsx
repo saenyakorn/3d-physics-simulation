@@ -1,16 +1,11 @@
+import { Suspense } from 'react'
+
 import { KeyboardControls } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
+import { Physics } from '@react-three/rapier'
 
+import { KeyBoardControlKey } from './constants/keyboard'
 import { MainScene } from './scenes/MainScene'
-
-export const KeyBoardControlKey = {
-  FORWARD: 'forward',
-  BACKWARD: 'backward',
-  LEFT: 'left',
-  RIGHT: 'right',
-  JUMP: 'jump',
-} as const
-export type KeyBoardControlKey = (typeof KeyBoardControlKey)[keyof typeof KeyBoardControlKey]
 
 export function App() {
   return (
@@ -23,8 +18,17 @@ export function App() {
         { name: KeyBoardControlKey.JUMP, keys: ['Space'] },
       ]}
     >
-      <Canvas style={{ width: '100vw', height: '100vh' }} shadows>
-        <MainScene />
+      <Canvas
+        style={{ width: '100vw', height: '100vh' }}
+        shadows
+        camera={{ position: [10, 10, 10], fov: 30 }}
+      >
+        <color attach="background" args={['#ececec']} />
+        <Suspense>
+          <Physics debug>
+            <MainScene />
+          </Physics>
+        </Suspense>
       </Canvas>
     </KeyboardControls>
   )

@@ -1,38 +1,80 @@
-import { Stats } from '@react-three/drei'
-import { Vector3, useThree } from '@react-three/fiber'
-import { Physics } from '@react-three/rapier'
+import { useRef } from 'react'
 
-import { Euler } from 'three'
+import { OrbitControls, useKeyboardControls } from '@react-three/drei'
+import { useFrame } from '@react-three/fiber'
+import { CollisionTarget, RapierRigidBody } from '@react-three/rapier'
 
+import { KeyBoardControlKey } from '../constants/keyboard'
+import { Actor } from '../objects/Actor'
 import { Floor } from '../objects/Floor'
-import { SphereRigidBody } from '../objects/SphereRigidBody'
-import { Box } from '../objects/box'
+
+const MOVEMENT_FORCE = 0.5
+const JUMP_FORCE = 5
+const FLOOR_NAME = 'floor'
 
 export function MainScene() {
-  useThree(({ camera }) => {
-    camera.setRotationFromEuler(new Euler(Math.PI / 8, Math.PI, 0, 'XYZ'))
-  })
+  const jumpPressed = useKeyboardControls((state) => state[KeyBoardControlKey.JUMP])
+  const leftPressed = useKeyboardControls((state) => state[KeyBoardControlKey.LEFT])
+  const rightPressed = useKeyboardControls((state) => state[KeyBoardControlKey.RIGHT])
+  const backwardPressed = useKeyboardControls((state) => state[KeyBoardControlKey.BACKWARD])
+  const forwardPressed = useKeyboardControls((state) => state[KeyBoardControlKey.FORWARD])
 
-  const boxPositions: Vector3[] = []
-  for (let i = -100; i <= 100; i += 10) {
-    for (let j = -100; j <= 100; j += 10) {
-      boxPositions.push([i, 1, j])
+  // Declare a ref to the objects
+  const actorRef = useRef<RapierRigidBody>(null)
+  const isOnFloor = useRef<boolean>(false)
+
+  const jump = () => {
+    // Can not jump if the actor is not on the floor
+    if (!isOnFloor.current) return
+    actorRef.current?.applyImpulse({ x: 0, y: JUMP_FORCE, z: 0 }, true)
+  }
+
+  const handleMovement = () => {
+    // Do nothing if the actor is not on the floor
+    if (!isOnFloor.current) return
+
+    if (leftPressed) {
+      actorRef.current?.applyImpulse({ x: -MOVEMENT_FORCE, y: 0, z: 0 }, true)
+    }
+
+    if (rightPressed) {
+      actorRef.current?.applyImpulse({ x: MOVEMENT_FORCE, y: 0, z: 0 }, true)
+    }
+
+    if (backwardPressed) {
+      actorRef.current?.applyImpulse({ x: 0, y: 0, z: -MOVEMENT_FORCE }, true)
+    }
+
+    if (forwardPressed) {
+      actorRef.current?.applyImpulse({ x: 0, y: 0, z: MOVEMENT_FORCE }, true)
     }
   }
 
+  const handleOnCollision = (other: CollisionTarget, expectedValue: boolean) => {
+    if (other?.rigidBodyObject?.name === FLOOR_NAME) {
+      isOnFloor.current = expectedValue
+    }
+  }
+
+  useFrame(() => {
+    if (jumpPressed) {
+      jump()
+    }
+    handleMovement()
+    console.log('FLOOR', isOnFloor.current)
+  })
+
   return (
     <>
-      <ambientLight intensity={0.1} />
-      <directionalLight castShadow intensity={0.4} position={[0, 10, 0]} />
-      <Stats />
-      <Physics debug>
-        {boxPositions.map((position, index) => (
-          <Box key={index} position={position} />
-        ))}
-        {/* <Car /> */}
-        <SphereRigidBody />
-        <Floor />
-      </Physics>
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[-10, 10, 0]} intensity={0.4} />
+      <OrbitControls />
+      <Actor
+        ref={actorRef}
+        onCollisionEnter={({ other }) => handleOnCollision(other, true)}
+        onCollisionExit={({ other }) => handleOnCollision(other, false)}
+      />
+      <Floor name={FLOOR_NAME} friction={10} />
     </>
   )
 }
