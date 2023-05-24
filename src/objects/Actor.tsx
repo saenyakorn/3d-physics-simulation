@@ -1,22 +1,15 @@
 import { forwardRef } from 'react'
 
 import { Box } from '@react-three/drei'
-import { RapierRigidBody, RigidBody, RigidBodyProps } from '@react-three/rapier'
 
-interface ActorProps extends RigidBodyProps {}
+import { Mesh } from 'three'
 
-export const Actor = forwardRef<RapierRigidBody, ActorProps>(function Actor(props, ref) {
+interface ActorProps {}
+
+export const Actor = forwardRef<Mesh, ActorProps>(function Actor({ ...props }, ref) {
   return (
-    <RigidBody
-      {...props}
-      name="actor"
-      colliders="trimesh"
-      mass={1}
-      type="dynamic"
-      position={[0, 10, 0]}
-      ref={ref}
-    >
-      <Box castShadow receiveShadow material-color="#EAE0AD" position={[1, 1, 0]} />
-    </RigidBody>
+    <mesh ref={ref}>
+      <Box castShadow receiveShadow material-color="#EAE0AD" />
+    </mesh>
   )
 })

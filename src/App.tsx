@@ -1,8 +1,8 @@
 import { Suspense } from 'react'
 
+import { Debug, Physics } from '@react-three/cannon'
 import { KeyboardControls } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
-import { Physics } from '@react-three/rapier'
 
 import { KeyBoardControlKey } from './constants/keyboard'
 import { MainScene } from './scenes/MainScene'
@@ -23,10 +23,11 @@ export function App() {
         shadows
         camera={{ position: [10, 10, 10], fov: 30 }}
       >
-        <color attach="background" args={['#ececec']} />
         <Suspense>
-          <Physics debug>
-            <MainScene />
+          <Physics>
+            <Debug>
+              <MainScene />
+            </Debug>
           </Physics>
         </Suspense>
       </Canvas>
