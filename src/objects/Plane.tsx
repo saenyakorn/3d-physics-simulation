@@ -1,11 +1,11 @@
 import { forwardRef } from 'react'
 
-import { PlaneProps as CanonPlanProps } from '@react-three/cannon'
+import { MeshProps } from '@react-three/fiber'
 
 import { Mesh } from 'three'
 
-interface PlaneProps extends CanonPlanProps {}
+interface PlaneProps extends MeshProps {}
 
 export const Plane = forwardRef<Mesh, PlaneProps>(function Actor(props, ref) {
-  return <mesh ref={ref}></mesh>
+  return <mesh ref={ref} {...props}></mesh>
 })
