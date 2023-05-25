@@ -84,7 +84,6 @@ export function MainScene() {
   }
 
   useFrame(() => {
-    console.log(isOnPlane.current)
     // Jump when the jump key is pressed
     if (jumpPressed) {
       jump()
