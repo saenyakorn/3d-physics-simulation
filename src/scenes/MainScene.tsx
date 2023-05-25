@@ -64,8 +64,9 @@ export function MainScene() {
 
   // Handle keyboard pressed and control actor movement
   const handleMovement = () => {
-    // Cannot move if the actor is not on the plane
     let movementForce = MOVEMENT_FORCE
+
+    // Slow down the actor when it is not on the plane
     if (!isOnPlane.current) {
       movementForce *= 0.5
     }
