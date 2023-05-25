@@ -12,7 +12,7 @@ import { Plane } from '../objects/Plane'
 
 const MOVEMENT_FORCE = 0.2
 const MAX_VELOCITY = 2
-const JUMP_FORCE = 2
+const JUMP_FORCE = 5
 const PLANE_NAME = 'PLANE'
 
 // Define that X-axis is forward moving and Z-axis is side moving
@@ -54,6 +54,7 @@ export function MainScene() {
   const jump = () => {
     if (isOnPlane.current) {
       actorApi.applyImpulse([0, JUMP_FORCE, 0], [0, 0, 0])
+      isOnPlane.current = false
     }
   }
 
@@ -94,11 +95,9 @@ export function MainScene() {
     // Move the camera to the actor position
     if (cameraRef.current && actorRef.current) {
       const actorPosition = actorRef.current.getWorldPosition(new Vector3())
-      const actorDirection = actorRef.current.getWorldDirection(new Vector3())
       cameraRef.current.position.copy(actorPosition)
       cameraRef.current.position.add(new Vector3(-10, 10, 0))
       cameraRef.current.lookAt(actorPosition)
-      // console.log(actorDirection.multiplyScalar(1000).round().divideScalar(100))
     }
   })
 
