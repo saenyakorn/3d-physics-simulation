@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 
-import { useBox, usePlane } from '@react-three/cannon'
+import { useBox } from '@react-three/cannon'
 import {
   Environment,
   OrbitControls,
@@ -38,7 +38,7 @@ export function MainScene() {
   const actorVelocity = useRef(new Vector3())
   const isOnPlane = useRef(false)
 
-  const [planeRef] = usePlane<Mesh>(() => ({ rotation: [-Math.PI / 2, 0, 0] }))
+  // TODO: move movement logic to actor component
   const [actorRef, actorApi] = useBox<Mesh>(() => ({
     mass: 1,
     position: [0, 5, 0],
@@ -122,7 +122,7 @@ export function MainScene() {
         if (jumpPressed) jump()
         // Handle keyboard pressed and control actor movement
         handleMovement()
-        followActor(delta)
+        // followActor(delta)
         break
       }
       case CameraType.DECORATION: {
@@ -135,12 +135,12 @@ export function MainScene() {
   return (
     <>
       <Environment files={'/textures/envmap.hdr'} background />
-      <ambientLight intensity={0.5} />
-      <directionalLight position={[-10, 10, 0]} intensity={0.4} />
+      {/* <ambientLight intensity={0.5} /> */}
+      {/* <directionalLight position={[-10, 10, 0]} intensity={0.4} /> */}
       <OrbitControls />
-      <PerspectiveCamera ref={cameraRef} makeDefault />
+      <PerspectiveCamera ref={cameraRef} makeDefault position={[-6, 3.9, 6.21]} />
       <Actor ref={actorRef} />
-      <Plane ref={planeRef} name={PLANE_NAME} />
+      <Plane name={PLANE_NAME} />
       <Track />
     </>
   )
