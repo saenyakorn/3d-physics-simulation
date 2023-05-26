@@ -1,7 +1,12 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 import { useBox, usePlane } from '@react-three/cannon'
-import { OrbitControls, PerspectiveCamera, useKeyboardControls } from '@react-three/drei'
+import {
+  Environment,
+  OrbitControls,
+  PerspectiveCamera,
+  useKeyboardControls,
+} from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 
 import { Mesh, Vector3 } from 'three'
@@ -10,6 +15,7 @@ import { CameraType } from '../constants/camera'
 import { KeyBoardControlKey } from '../constants/keyboard'
 import { Actor } from '../objects/Actor'
 import { Plane } from '../objects/Plane'
+import { Track } from '../objects/Track'
 import { useCameraStore } from '../states/camera'
 
 const MOVEMENT_FORCE = 0.2
@@ -128,12 +134,14 @@ export function MainScene() {
 
   return (
     <>
+      <Environment files={'/textures/envmap.hdr'} background />
       <ambientLight intensity={0.5} />
       <directionalLight position={[-10, 10, 0]} intensity={0.4} />
       <OrbitControls />
       <PerspectiveCamera ref={cameraRef} makeDefault />
       <Actor ref={actorRef} />
       <Plane ref={planeRef} name={PLANE_NAME} />
+      <Track />
     </>
   )
 }
