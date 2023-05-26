@@ -135,7 +135,7 @@ export function MainScene() {
   return (
     <>
       <Environment files={'/textures/envmap.hdr'} background />
-      {/* <ambientLight intensity={0.5} /> */}
+      <ambientLight intensity={0.2} />
       {/* <directionalLight position={[-10, 10, 0]} intensity={0.4} /> */}
       <OrbitControls />
       <PerspectiveCamera ref={cameraRef} makeDefault position={[-6, 3.9, 6.21]} />
