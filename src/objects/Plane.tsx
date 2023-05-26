@@ -10,6 +10,7 @@ interface PlaneProps extends MeshProps {}
 
 export function Plane(props: PlaneProps) {
   const [ref] = usePlane<Mesh>(() => ({
+    type: 'Static',
     position: [-2.285 * 6, -0.015, -1.325 * 6],
     rotation: [-Math.PI / 2, 0, -0.079],
   }))
