@@ -12,6 +12,7 @@ import { CameraType } from '../constants/camera'
 import { KeyBoardControlKey } from '../constants/keyboard'
 import { PLANE_NAME } from '../scenes/MainScene'
 import { useCameraStore } from '../states/camera'
+import { useColorStore } from '../states/color'
 
 const MOVEMENT_FORCE = 0.4
 const MAX_VELOCITY = 4
@@ -22,6 +23,12 @@ const PERSPECRIVE_CAMERA_POSITION = new Vector3(10, 10, 0)
 interface ActorProps {}
 
 export function Actor({ ...props }) {
+  const [color1, color2, color3] = useColorStore((state) => [
+    state.color1,
+    state.color2,
+    state.color3,
+  ])
+
   const cameraType = useCameraStore((state) => state.cameraType)
   const leftPressed = useKeyboardControls((state) => state[KeyBoardControlKey.LEFT])
   const rightPressed = useKeyboardControls((state) => state[KeyBoardControlKey.RIGHT])
@@ -218,8 +225,13 @@ export function Actor({ ...props }) {
   return (
     <>
       <mesh ref={actorRef} castShadow receiveShadow>
-        <boxGeometry />
-        <meshStandardMaterial color="yellow" />
+        <boxGeometry attach="geometry" args={[1, 1, 1]} />
+        <meshStandardMaterial attach="material-0" color={color1} />
+        <meshStandardMaterial attach="material-1" color={color1} />
+        <meshStandardMaterial attach="material-2" color={color3} />
+        <meshStandardMaterial attach="material-3" color={color3} />
+        <meshStandardMaterial attach="material-4" color={color2} />
+        <meshStandardMaterial attach="material-5" color={color2} />
       </mesh>
       {/* <PerspectiveCamera ref={cameraRef} position={[10, 10, 0]} /> */}
       <OrbitControls ref={orbitControlRef} />
