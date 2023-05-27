@@ -16,6 +16,7 @@ import { useCameraStore } from '../states/camera'
 const MOVEMENT_FORCE = 0.4
 const MAX_VELOCITY = 4
 const JUMP_FORCE = 5
+const ROTATE_SPEED = Math.PI / 3 // per second
 
 interface ActorProps {}
 
@@ -30,7 +31,7 @@ export function Actor({ ...props }) {
   const cameraRef = useRef<Mesh>()
   const orbitControlRef = useRef<OrbitControlsImpl>(null)
   const actorVelocity = useRef(new Vector3())
-  const cameraAngle = useRef(0)
+  const cameraAngle = useRef(Math.PI / 2)
   const isOnPlane = useRef(false)
   const lastActorPosition = useRef(new Vector3())
 
@@ -63,6 +64,18 @@ export function Actor({ ...props }) {
     }
   }
 
+  const handleRotateCamera = (delta: number) => {
+    if (orbitControlRef.current) {
+      if (leftPressed) {
+        cameraAngle.current += ROTATE_SPEED * delta
+      }
+      if (rightPressed) {
+        cameraAngle.current -= ROTATE_SPEED * delta
+      }
+      orbitControlRef.current.setAzimuthalAngle(cameraAngle.current)
+    }
+  }
+
   // Handle keyboard pressed and control actor movement
   const handleMovement = () => {
     if (cameraRef.current) {
@@ -78,12 +91,6 @@ export function Actor({ ...props }) {
       forwardDirection.y = 0
       forwardDirection.normalize()
 
-      // if (leftPressed && actorVelocity.current.z > -MAX_VELOCITY) {
-      //   impulseDirection.add(new Vector3(0, 0, -movementForce))
-      // }
-      // if (rightPressed && actorVelocity.current.z < MAX_VELOCITY) {
-      //   impulseDirection.add(new Vector3(0, 0, movementForce))
-      // }
       if (forwardPressed && actorVelocity.current.length() < MAX_VELOCITY) {
         impulseDirection.add(forwardDirection.multiplyScalar(movementForce))
       }
@@ -121,9 +128,10 @@ export function Actor({ ...props }) {
   useFrame((state, delta) => {
     switch (cameraType) {
       case CameraType.FOLLOW: {
-        // Jump when the jump key is pressed
-        if (jumpPressed) jump()
-        // Handle keyboard pressed and control actor movement
+        if (jumpPressed) {
+          jump()
+        }
+        handleRotateCamera(delta)
         handleMovement()
         followActor(delta)
         break
@@ -140,7 +148,7 @@ export function Actor({ ...props }) {
         <boxGeometry />
         <meshStandardMaterial color="yellow" />
       </mesh>
-      <PerspectiveCamera ref={cameraRef} makeDefault position={[-6, 5.9, 6.21]} />
+      <PerspectiveCamera ref={cameraRef} makeDefault position={[10, 10, 0]} />
       <OrbitControls ref={orbitControlRef} />
     </>
   )
