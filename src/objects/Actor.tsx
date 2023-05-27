@@ -30,6 +30,7 @@ export function Actor({ ...props }) {
   const cameraRef = useRef<Mesh>()
   const orbitControlRef = useRef<OrbitControlsImpl>(null)
   const actorVelocity = useRef(new Vector3())
+  const cameraAngle = useRef(0)
   const isOnPlane = useRef(false)
   const lastActorPosition = useRef(new Vector3())
 
@@ -64,29 +65,34 @@ export function Actor({ ...props }) {
 
   // Handle keyboard pressed and control actor movement
   const handleMovement = () => {
-    let movementForce = MOVEMENT_FORCE
+    if (cameraRef.current) {
+      let movementForce = MOVEMENT_FORCE
 
-    // Slow down the actor when it is not on the plane
-    if (!isOnPlane.current) {
-      movementForce *= 0.5
-    }
+      // Slow down the actor when it is not on the plane
+      if (!isOnPlane.current) {
+        movementForce *= 0.5
+      }
 
-    const impulseDirection = new Vector3()
+      const impulseDirection = new Vector3()
+      const forwardDirection = cameraRef.current.getWorldDirection(new Vector3())
+      forwardDirection.y = 0
+      forwardDirection.normalize()
 
-    if (leftPressed && actorVelocity.current.z > -MAX_VELOCITY) {
-      impulseDirection.add(new Vector3(0, 0, -movementForce))
-    }
-    if (rightPressed && actorVelocity.current.z < MAX_VELOCITY) {
-      impulseDirection.add(new Vector3(0, 0, movementForce))
-    }
-    if (forwardPressed && actorVelocity.current.x < MAX_VELOCITY) {
-      impulseDirection.add(new Vector3(movementForce, 0, 0))
-    }
-    if (backwardPressed && actorVelocity.current.x > -MAX_VELOCITY) {
-      impulseDirection.add(new Vector3(-movementForce, 0, 0))
-    }
+      // if (leftPressed && actorVelocity.current.z > -MAX_VELOCITY) {
+      //   impulseDirection.add(new Vector3(0, 0, -movementForce))
+      // }
+      // if (rightPressed && actorVelocity.current.z < MAX_VELOCITY) {
+      //   impulseDirection.add(new Vector3(0, 0, movementForce))
+      // }
+      if (forwardPressed && actorVelocity.current.length() < MAX_VELOCITY) {
+        impulseDirection.add(forwardDirection.multiplyScalar(movementForce))
+      }
+      if (backwardPressed && actorVelocity.current.length() > -MAX_VELOCITY) {
+        impulseDirection.add(forwardDirection.multiplyScalar(-movementForce))
+      }
 
-    actorApi.applyImpulse(impulseDirection?.toArray(), [0, 0, 0])
+      actorApi.applyImpulse(impulseDirection?.toArray(), [0, 0, 0])
+    }
   }
 
   // Move the camera to the actor position
@@ -134,7 +140,7 @@ export function Actor({ ...props }) {
         <boxGeometry />
         <meshStandardMaterial color="yellow" />
       </mesh>
-      <PerspectiveCamera ref={cameraRef} makeDefault position={[-6, 3.9, 6.21]} />
+      <PerspectiveCamera ref={cameraRef} makeDefault position={[-6, 5.9, 6.21]} />
       <OrbitControls ref={orbitControlRef} />
     </>
   )
