@@ -6,14 +6,15 @@ import { useFrame } from '@react-three/fiber'
 
 import { Mesh } from 'three'
 import { Vector3 } from 'three'
+import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
 
 import { CameraType } from '../constants/camera'
 import { KeyBoardControlKey } from '../constants/keyboard'
 import { PLANE_NAME } from '../scenes/MainScene'
 import { useCameraStore } from '../states/camera'
 
-const MOVEMENT_FORCE = 0.2
-const MAX_VELOCITY = 2
+const MOVEMENT_FORCE = 0.4
+const MAX_VELOCITY = 4
 const JUMP_FORCE = 5
 
 interface ActorProps {}
@@ -27,8 +28,10 @@ export function Actor({ ...props }) {
   const jumpPressed = useKeyboardControls((state) => state[KeyBoardControlKey.JUMP])
 
   const cameraRef = useRef<Mesh>()
+  const orbitControlRef = useRef<OrbitControlsImpl>(null)
   const actorVelocity = useRef(new Vector3())
   const isOnPlane = useRef(false)
+  const lastActorPosition = useRef(new Vector3())
 
   const [actorRef, actorApi] = useBox<Mesh>(() => ({
     mass: 1,
@@ -88,11 +91,14 @@ export function Actor({ ...props }) {
 
   // Move the camera to the actor position
   const followActor = (delta: number) => {
-    if (cameraRef.current && actorRef.current) {
+    if (cameraRef.current && actorRef.current && orbitControlRef.current) {
       const actorPosition = actorRef.current.getWorldPosition(new Vector3())
-      cameraRef.current.position.copy(actorPosition)
-      cameraRef.current.position.add(new Vector3(-10, 10, 0))
-      cameraRef.current.lookAt(actorPosition)
+      if (!lastActorPosition.current.equals(new Vector3())) {
+        const positionDiff = actorPosition.clone().sub(lastActorPosition.current)
+        cameraRef.current.position.add(positionDiff)
+        orbitControlRef.current.target.set(actorPosition.x, actorPosition.y, actorPosition.z)
+      }
+      lastActorPosition.current = actorPosition
     }
   }
 
@@ -113,7 +119,7 @@ export function Actor({ ...props }) {
         if (jumpPressed) jump()
         // Handle keyboard pressed and control actor movement
         handleMovement()
-        // followActor(delta)
+        followActor(delta)
         break
       }
       case CameraType.DECORATION: {
@@ -129,7 +135,7 @@ export function Actor({ ...props }) {
         <meshStandardMaterial color="yellow" />
       </mesh>
       <PerspectiveCamera ref={cameraRef} makeDefault position={[-6, 3.9, 6.21]} />
-      <OrbitControls />
+      <OrbitControls ref={orbitControlRef} />
     </>
   )
 }
