@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 
-import { Physics } from '@react-three/cannon'
+import { Debug, Physics } from '@react-three/cannon'
 import { KeyboardControls } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 
@@ -34,9 +34,9 @@ export function App() {
       >
         <Suspense>
           <Physics>
-            {/* <Debug> */}
-            <MainScene />
-            {/* </Debug> */}
+            <Debug>
+              <MainScene />
+            </Debug>
           </Physics>
         </Suspense>
       </Canvas>

@@ -9,21 +9,14 @@ import { useGLTF, useTexture } from '@react-three/drei'
 import * as THREE from 'three'
 import { GLTF } from 'three-stdlib'
 
-import { ColliderBox } from './ColliderBox'
+import { scalarMultiply, scale } from '../util/scale'
+import { ColliderBox } from './colliders/ColliderBox'
+import { Ramp } from './colliders/Ramp'
 
 type GLTFResult = GLTF & {
   nodes: {
     ['Street003_-_applied_transform']: THREE.Mesh
   }
-}
-
-const scale = 6
-
-function scalarMultiply(
-  [x, y, z]: [x: number, y: number, z: number],
-  scalar: number
-): [x: number, y: number, z: number] {
-  return [x * scalar, y * scalar, z * scalar]
 }
 
 export function Track() {
@@ -39,6 +32,8 @@ export function Track() {
       <mesh geometry={nodes['Street003_-_applied_transform'].geometry} scale={scale}>
         <meshStandardMaterial toneMapped={false} map={colorMap} />
       </mesh>
+
+      {/* <Ramp /> */}
 
       {/* trees */}
       <ColliderBox

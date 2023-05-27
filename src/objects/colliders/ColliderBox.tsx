@@ -17,7 +17,7 @@ export function ColliderBox({ position, scale }: ColliderBoxProps) {
   return debug ? (
     <mesh position={position}>
       <boxGeometry args={scale} />
-      <meshBasicMaterial transparent={true} opacity={0.25} />
+      <meshBasicMaterial transparent={true} opacity={0.5} />
     </mesh>
   ) : null
 }
