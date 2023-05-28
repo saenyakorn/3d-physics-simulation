@@ -32,8 +32,6 @@ export function Track() {
         <meshStandardMaterial toneMapped={false} map={colorMap} />
       </mesh>
 
-      {/* <Ramp /> */}
-
       {/* trees */}
       <ColliderBox
         position={scalarMultiply([1.75, 0, 0.5], scale)}

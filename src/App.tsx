@@ -67,26 +67,11 @@ export function App() {
             Adjust Color
           </Typography>
           <FormLabel>Color 1</FormLabel>
-          <Input
-            type="color"
-            value={color1}
-            onChange={(e) => setColor1(e.target.value)}
-            // sx={{ padding: 0 }}
-          />
+          <Input type="color" value={color1} onChange={(e) => setColor1(e.target.value)} />
           <FormLabel>Color 2</FormLabel>
-          <Input
-            type="color"
-            value={color2}
-            onChange={(e) => setColor2(e.target.value)}
-            // sx={{ padding: 0 }}
-          />
+          <Input type="color" value={color2} onChange={(e) => setColor2(e.target.value)} />
           <FormLabel>Color 3</FormLabel>
-          <Input
-            type="color"
-            value={color3}
-            onChange={(e) => setColor3(e.target.value)}
-            // sx={{ padding: 0 }}
-          />
+          <Input type="color" value={color3} onChange={(e) => setColor3(e.target.value)} />
         </Stack>
       )}
 

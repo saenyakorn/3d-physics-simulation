@@ -22,9 +22,7 @@ const ROTATE_SPEED = Math.PI / 2 // per second
 const CAMERA_OFFSET_RADIUS = 20
 const CAMERA_OFFSET_HEIGHT = 12
 
-interface ActorProps {}
-
-export function Actor({ ...props }) {
+export function Actor() {
   const [color1, color2, color3] = useColorStore((state) => [
     state.color1,
     state.color2,
@@ -118,7 +116,7 @@ export function Actor({ ...props }) {
   }
 
   // Move the camera to the actor position
-  const followActor = (delta: number) => {
+  const followActor = () => {
     if (!cameraControlRef.current || !actorRef.current) return
 
     // calculate new camera position with polar coordinates
@@ -169,7 +167,7 @@ export function Actor({ ...props }) {
         }
         handleRotateCamera(delta)
         handleMovement()
-        followActor(delta)
+        followActor()
         break
       }
       case CameraType.DECORATION: {
