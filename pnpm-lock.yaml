@@ -22,6 +22,9 @@ dependencies:
   '@types/three':
     specifier: ^0.150.1
     version: 0.150.2
+  camera-controls:
+    specifier: ^2.3.7
+    version: 2.3.7(three@0.151.3)
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -1050,7 +1053,7 @@ packages:
       '@react-spring/three': 9.6.1(@react-three/fiber@8.13.0)(react@18.2.0)(three@0.151.3)
       '@react-three/fiber': 8.13.0(react-dom@18.2.0)(react@18.2.0)(three@0.151.3)
       '@use-gesture/react': 10.2.27(react@18.2.0)
-      camera-controls: 2.3.5(three@0.151.3)
+      camera-controls: 2.3.7(three@0.151.3)
       detect-gpu: 5.0.25
       glsl-noise: 0.0.0
       lodash.clamp: 4.0.3
@@ -1460,8 +1463,8 @@ packages:
     resolution: {integrity: sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==}
     engines: {node: '>=6'}
 
-  /camera-controls@2.3.5(three@0.151.3):
-    resolution: {integrity: sha512-T4AcGyUL4Dn2VIxEX5R+vDvrWNY4KqHziPwzUMca4zKCawf5KMbbcmVbuhUzohzm2DxTcr5gm5gNSmCXWVTyWQ==}
+  /camera-controls@2.3.7(three@0.151.3):
+    resolution: {integrity: sha512-PDb2xt6fJwKUqOIRr38IwF6ZtonwBF24lfjorTqlWYOBUiqkCDg0qgRBNo/ikB0xA2YoOx8m8Zw7ZZsnR4nV0g==}
     peerDependencies:
       three: '>=0.126.1'
     dependencies:

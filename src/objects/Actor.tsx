@@ -7,6 +7,8 @@ import { useFrame } from '@react-three/fiber'
 import { Mesh } from 'three'
 import { Vector3 } from 'three'
 
+import CameraControlsImpl from 'camera-controls'
+
 import { CameraType } from '../constants/camera'
 import { KeyBoardControlKey } from '../constants/keyboard'
 import { PLANE_NAME } from '../scenes/MainScene'
@@ -195,7 +197,16 @@ export function Actor({ ...props }) {
         <meshStandardMaterial attach="material-4" color={color2} />
         <meshStandardMaterial attach="material-5" color={color2} />
       </mesh>
-      <CameraControls ref={cameraControlRef} makeDefault minZoom={0.8} maxZoom={1} />
+      <CameraControls
+        ref={cameraControlRef}
+        makeDefault
+        mouseButtons={{
+          wheel: CameraControlsImpl.ACTION.NONE,
+          left: CameraControlsImpl.ACTION.NONE,
+          middle: CameraControlsImpl.ACTION.NONE,
+          right: CameraControlsImpl.ACTION.NONE,
+        }}
+      />
     </>
   )
 }
