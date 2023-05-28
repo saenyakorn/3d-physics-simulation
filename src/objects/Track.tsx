@@ -11,7 +11,6 @@ import { GLTF } from 'three-stdlib'
 
 import { scalarMultiply, scale } from '../util/scale'
 import { ColliderBox } from './colliders/ColliderBox'
-import { Ramp } from './colliders/Ramp'
 
 type GLTFResult = GLTF & {
   nodes: {
