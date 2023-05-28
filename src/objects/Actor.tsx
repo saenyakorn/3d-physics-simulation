@@ -94,13 +94,6 @@ export function Actor({ ...props }) {
   const handleMovement = () => {
     if (!cameraControlRef.current) return
 
-    let movementForce = MOVEMENT_FORCE
-
-    // Slow down the actor when it is not on the plane
-    if (!isOnPlane.current) {
-      movementForce *= 0.5
-    }
-
     const impulseDirection = new Vector3()
     const forwardDirection = cameraControlRef.current.camera.getWorldDirection(new Vector3())
 
@@ -109,16 +102,16 @@ export function Actor({ ...props }) {
     const leftDirection = new Vector3(forwardDirection.z, 0, -forwardDirection.x)
 
     if (forwardPressed && actorVelocity.current.length() < MAX_VELOCITY) {
-      impulseDirection.add(forwardDirection.clone().multiplyScalar(movementForce))
+      impulseDirection.add(forwardDirection.clone().multiplyScalar(MOVEMENT_FORCE))
     }
     if (backwardPressed && actorVelocity.current.length() < MAX_VELOCITY) {
-      impulseDirection.add(forwardDirection.clone().multiplyScalar(-movementForce))
+      impulseDirection.add(forwardDirection.clone().multiplyScalar(-MOVEMENT_FORCE))
     }
     if (leftPressed && actorVelocity.current.length() < MAX_VELOCITY) {
-      impulseDirection.add(leftDirection.clone().multiplyScalar(movementForce))
+      impulseDirection.add(leftDirection.clone().multiplyScalar(MOVEMENT_FORCE))
     }
     if (rightPressed && actorVelocity.current.length() < MAX_VELOCITY) {
-      impulseDirection.add(leftDirection.clone().multiplyScalar(-movementForce))
+      impulseDirection.add(leftDirection.clone().multiplyScalar(-MOVEMENT_FORCE))
     }
 
     actorApi.applyImpulse(impulseDirection?.toArray(), [0, 0, 0])
