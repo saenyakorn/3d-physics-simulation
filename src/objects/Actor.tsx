@@ -1,12 +1,11 @@
 import { useEffect, useRef } from 'react'
 
 import { useBox } from '@react-three/cannon'
-import { CameraControls, OrbitControls, useKeyboardControls } from '@react-three/drei'
+import { CameraControls, useKeyboardControls } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 
 import { Mesh } from 'three'
 import { Vector3 } from 'three'
-import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
 
 import { CameraType } from '../constants/camera'
 import { KeyBoardControlKey } from '../constants/keyboard'
@@ -17,8 +16,10 @@ import { useColorStore } from '../states/color'
 const MOVEMENT_FORCE = 0.4
 const MAX_VELOCITY = 4
 const JUMP_FORCE = 5
-const ROTATE_SPEED = Math.PI / 3 // per second
-const PERSPECRIVE_CAMERA_POSITION = new Vector3(10, 10, 0)
+const ROTATE_SPEED = Math.PI / 2 // per second
+const PERSPECTIVE_CAMERA_POSITION = new Vector3(10, 10, 0)
+const CAMERA_OFFSET_RADIUS = 15
+const CAMERA_OFFSET_HEIGHT = 10
 
 interface ActorProps {}
 
@@ -38,12 +39,10 @@ export function Actor({ ...props }) {
 
   const cameraRef = useRef<Mesh>()
   const cameraControlRef = useRef<CameraControls>(null)
-  const orbitControlRef = useRef<OrbitControlsImpl>(null)
   const actorVelocity = useRef(new Vector3())
   const actorPosition = useRef(new Vector3())
   const cameraAngle = useRef(Math.PI / 2)
   const isOnPlane = useRef(false)
-  const lastActorPosition = useRef(new Vector3())
 
   const [actorRef, actorApi] = useBox<Mesh>(() => ({
     mass: 1,
@@ -87,8 +86,6 @@ export function Actor({ ...props }) {
     if (rightPressed) {
       cameraAngle.current -= ROTATE_SPEED * delta
     }
-
-    cameraControlRef.current.rotateAzimuthTo(cameraAngle.current, true)
   }
 
   // Handle keyboard pressed and control actor movement
@@ -122,33 +119,23 @@ export function Actor({ ...props }) {
   const followActor = (delta: number) => {
     if (!cameraControlRef.current || !actorRef.current) return
 
+    // calculate new camera position with polar coordinates
+    const cameraOffset = new Vector3(
+      CAMERA_OFFSET_RADIUS * Math.cos(cameraAngle.current),
+      CAMERA_OFFSET_HEIGHT,
+      CAMERA_OFFSET_RADIUS * Math.sin(cameraAngle.current)
+    )
+
     cameraControlRef.current.setLookAt(
-      actorPosition.current.x + PERSPECRIVE_CAMERA_POSITION.x,
-      actorPosition.current.y + PERSPECRIVE_CAMERA_POSITION.y,
-      actorPosition.current.z + PERSPECRIVE_CAMERA_POSITION.z,
+      actorPosition.current.x + cameraOffset.x,
+      actorPosition.current.y + cameraOffset.y,
+      actorPosition.current.z + cameraOffset.z,
       actorPosition.current.x,
       actorPosition.current.y,
       actorPosition.current.z,
       true
     )
-
-    // const actorPosition = actorRef.current.getWorldPosition(new Vector3())
-
-    // // If the actor is moving, move the camera with it
-    // if (!lastActorPosition.current.equals(new Vector3())) {
-    //   const positionDiff = actorPosition.clone().sub(lastActorPosition.current)
-
-    //   // cameraRef.current.position.add(positionDiff)
-
-    //   // const expectedCameraPosition = cameraRef.current
-    //   //   .getWorldPosition(new Vector3())
-    //   //   .add(positionDiff)
-
-    //   // orbitControlRef.current.target.set(actorPosition.x, actorPosition.y, actorPosition.z)
-    // }
-
-    // // update the last actor position
-    // lastActorPosition.current = actorPosition
+    cameraControlRef.current?.zoomTo(1, true)
   }
 
   // Close up the camera to the actor for decoration
@@ -171,38 +158,6 @@ export function Actor({ ...props }) {
     )
     cameraControlRef.current?.zoomTo(0.8, true)
   }
-
-  const resetCamera = () => {
-    if (!actorPosition.current) return
-
-    const currentActorPosition = actorPosition.current.clone()
-
-    cameraControlRef.current?.setLookAt(
-      currentActorPosition.x + PERSPECRIVE_CAMERA_POSITION.x,
-      currentActorPosition.y + PERSPECRIVE_CAMERA_POSITION.y,
-      currentActorPosition.z + PERSPECRIVE_CAMERA_POSITION.z,
-      currentActorPosition.x,
-      currentActorPosition.y,
-      currentActorPosition.z,
-      true
-    )
-    cameraControlRef.current?.zoomTo(1, true)
-  }
-
-  // Handle on camera type change
-  useEffect(() => {
-    // Reset the camera position
-    switch (cameraType) {
-      case CameraType.FOLLOW: {
-        resetCamera()
-        break
-      }
-      case CameraType.DECORATION: {
-        closeUpActor()
-        break
-      }
-    }
-  }, [cameraType])
 
   useFrame((state, delta) => {
     switch (cameraType) {
@@ -234,8 +189,8 @@ export function Actor({ ...props }) {
         <meshStandardMaterial attach="material-5" color={color2} />
       </mesh>
       {/* <PerspectiveCamera ref={cameraRef} position={[10, 10, 0]} /> */}
-      <OrbitControls ref={orbitControlRef} />
-      <CameraControls ref={cameraControlRef} makeDefault />
+      {/* <OrbitControls ref={orbitControlRef} /> */}
+      <CameraControls ref={cameraControlRef} makeDefault minZoom={0.8} maxZoom={1} />
     </>
   )
 }
