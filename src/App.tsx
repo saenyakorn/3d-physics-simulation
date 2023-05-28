@@ -35,6 +35,8 @@ export function App() {
         { name: KeyBoardControlKey.BACKWARD, keys: ['ArrowDown', 's', 'S'] },
         { name: KeyBoardControlKey.LEFT, keys: ['ArrowLeft', 'a', 'A'] },
         { name: KeyBoardControlKey.RIGHT, keys: ['ArrowRight', 'd', 'D'] },
+        { name: KeyBoardControlKey.ROTATE_LEFT, keys: ['q', 'Q'] },
+        { name: KeyBoardControlKey.ROTATE_RIGHT, keys: ['e', 'E'] },
         { name: KeyBoardControlKey.JUMP, keys: ['Space'] },
       ]}
     >

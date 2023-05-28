@@ -34,6 +34,8 @@ export function Actor({ ...props }) {
   const rightPressed = useKeyboardControls((state) => state[KeyBoardControlKey.RIGHT])
   const backwardPressed = useKeyboardControls((state) => state[KeyBoardControlKey.BACKWARD])
   const forwardPressed = useKeyboardControls((state) => state[KeyBoardControlKey.FORWARD])
+  const rotateLeftPressed = useKeyboardControls((state) => state[KeyBoardControlKey.ROTATE_LEFT])
+  const rotateRightPressed = useKeyboardControls((state) => state[KeyBoardControlKey.ROTATE_RIGHT])
   const jumpPressed = useKeyboardControls((state) => state[KeyBoardControlKey.JUMP])
 
   const cameraControlRef = useRef<CameraControls>(null)
@@ -78,10 +80,10 @@ export function Actor({ ...props }) {
   const handleRotateCamera = (delta: number) => {
     if (!cameraControlRef.current) return
 
-    if (leftPressed) {
+    if (rotateLeftPressed) {
       cameraAngle.current += ROTATE_SPEED * delta
     }
-    if (rightPressed) {
+    if (rotateRightPressed) {
       cameraAngle.current -= ROTATE_SPEED * delta
     }
   }
@@ -102,12 +104,19 @@ export function Actor({ ...props }) {
 
     forwardDirection.y = 0
     forwardDirection.normalize()
+    const leftDirection = new Vector3(forwardDirection.z, 0, -forwardDirection.x)
 
     if (forwardPressed && actorVelocity.current.length() < MAX_VELOCITY) {
       impulseDirection.add(forwardDirection.clone().multiplyScalar(movementForce))
     }
     if (backwardPressed && actorVelocity.current.length() < MAX_VELOCITY) {
       impulseDirection.add(forwardDirection.clone().multiplyScalar(-movementForce))
+    }
+    if (leftPressed && actorVelocity.current.length() < MAX_VELOCITY) {
+      impulseDirection.add(leftDirection.clone().multiplyScalar(movementForce))
+    }
+    if (rightPressed && actorVelocity.current.length() < MAX_VELOCITY) {
+      impulseDirection.add(leftDirection.clone().multiplyScalar(-movementForce))
     }
 
     actorApi.applyImpulse(impulseDirection?.toArray(), [0, 0, 0])
