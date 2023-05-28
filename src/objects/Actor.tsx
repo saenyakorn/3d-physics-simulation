@@ -17,9 +17,8 @@ const MOVEMENT_FORCE = 0.4
 const MAX_VELOCITY = 4
 const JUMP_FORCE = 5
 const ROTATE_SPEED = Math.PI / 2 // per second
-const PERSPECTIVE_CAMERA_POSITION = new Vector3(10, 10, 0)
-const CAMERA_OFFSET_RADIUS = 15
-const CAMERA_OFFSET_HEIGHT = 10
+const CAMERA_OFFSET_RADIUS = 20
+const CAMERA_OFFSET_HEIGHT = 12
 
 interface ActorProps {}
 
@@ -37,7 +36,6 @@ export function Actor({ ...props }) {
   const forwardPressed = useKeyboardControls((state) => state[KeyBoardControlKey.FORWARD])
   const jumpPressed = useKeyboardControls((state) => state[KeyBoardControlKey.JUMP])
 
-  const cameraRef = useRef<Mesh>()
   const cameraControlRef = useRef<CameraControls>(null)
   const actorVelocity = useRef(new Vector3())
   const actorPosition = useRef(new Vector3())
@@ -100,7 +98,7 @@ export function Actor({ ...props }) {
     }
 
     const impulseDirection = new Vector3()
-    const forwardDirection = cameraControlRef.current.getPosition(new Vector3())
+    const forwardDirection = cameraControlRef.current.camera.getWorldDirection(new Vector3())
 
     forwardDirection.y = 0
     forwardDirection.normalize()
@@ -108,7 +106,7 @@ export function Actor({ ...props }) {
     if (forwardPressed && actorVelocity.current.length() < MAX_VELOCITY) {
       impulseDirection.add(forwardDirection.clone().multiplyScalar(movementForce))
     }
-    if (backwardPressed && actorVelocity.current.length() > -MAX_VELOCITY) {
+    if (backwardPressed && actorVelocity.current.length() < MAX_VELOCITY) {
       impulseDirection.add(forwardDirection.clone().multiplyScalar(-movementForce))
     }
 
@@ -121,9 +119,9 @@ export function Actor({ ...props }) {
 
     // calculate new camera position with polar coordinates
     const cameraOffset = new Vector3(
-      CAMERA_OFFSET_RADIUS * Math.cos(cameraAngle.current),
+      CAMERA_OFFSET_RADIUS * Math.sin(cameraAngle.current),
       CAMERA_OFFSET_HEIGHT,
-      CAMERA_OFFSET_RADIUS * Math.sin(cameraAngle.current)
+      CAMERA_OFFSET_RADIUS * Math.cos(cameraAngle.current)
     )
 
     cameraControlRef.current.setLookAt(
@@ -188,8 +186,6 @@ export function Actor({ ...props }) {
         <meshStandardMaterial attach="material-4" color={color2} />
         <meshStandardMaterial attach="material-5" color={color2} />
       </mesh>
-      {/* <PerspectiveCamera ref={cameraRef} position={[10, 10, 0]} /> */}
-      {/* <OrbitControls ref={orbitControlRef} /> */}
       <CameraControls ref={cameraControlRef} makeDefault minZoom={0.8} maxZoom={1} />
     </>
   )
